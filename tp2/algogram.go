@@ -6,11 +6,13 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 const (
 	UBICACION_ARCH_USUARIOS = 0
 	LARGO_PARAMETROS        = 1
+	ESPACIO                 = " "
 )
 
 func main() {
@@ -51,6 +53,37 @@ func crearDiccionarioUsuarios(ruta string) (algogram_tdas.DiccionarioUsuarios, e
 
 func lectura(diccUsuarios algogram_tdas.DiccionarioUsuarios, listaDePosts []algogram_tdas.Post) {
 	escaner := bufio.NewScanner(os.Stdin)
+	var usuarioLogueado algogram_tdas.Usuario
 	for escaner.Scan() {
+		entrada := escaner.Text()
+		palabras := strings.Split(entrada, ESPACIO)
+		comando := palabras[0]
+		parametrosIngresados := palabras[1:]
+		switch {
+		case comando == "login":
+			if usuarioLogueado != nil {
+				fmt.Println(errores.ErrorUsuarioLogueado{}.Error())
+				continue
+			}
+			usuario, err := login(parametrosIngresados, diccUsuarios)
+			if err != nil {
+				fmt.Println(err.Error())
+				continue
+			}
+			usuarioLogueado = usuario
+			fmt.Println("Hola ", usuario.LeerNombreDeUsuario())
+		}
+
 	}
+}
+
+func login(parametros []string, diccUsuarios algogram_tdas.DiccionarioUsuarios) (algogram_tdas.Usuario, error) {
+	var usuario algogram_tdas.Usuario
+	if len(parametros) < 1 || len(parametros) > 2 {
+		return usuario, errores.ErrorUsuarioNoExiste{}
+	}
+	usuario, err := diccUsuarios.DevolverUsuario(parametros[0])
+	return usuario, err
+}
+
 }
