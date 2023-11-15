@@ -1,4 +1,4 @@
-package tdas
+package algogram_tdas
 
 import (
 	"algogram/codigo/errores"
@@ -20,6 +20,10 @@ type usuarioImplementacion struct {
 	posicion   int
 	postActual Post
 	feed       cola_prioridad.ColaPrioridad[Post] // Heap de minimos
+}
+
+type diccionarioUsuariosImplementacion struct {
+	dicc diccionario.Diccionario[string, Usuario]
 }
 
 func (usuario *usuarioImplementacion) LeerNombreDeUsuario() string {
@@ -95,6 +99,21 @@ func CrearPost(id int, usuario Usuario, texto string) Post {
 	return post
 }
 
+func (dic *diccionarioUsuariosImplementacion) DevolverUsuario(nombre string) (Usuario, error) {
+	if !dic.dicc.Pertenece(nombre) {
+		return nil, errores.ErrorUsuarioNoExiste{}
+	}
+	return dic.dicc.Obtener(nombre), nil
+}
+
+func (dic *diccionarioUsuariosImplementacion) AgregarUsuario(nombre string, usuario Usuario) {
+	dic.dicc.Guardar(nombre, usuario)
+}
+
+func (dic *diccionarioUsuariosImplementacion) Cantidad() int {
+	return dic.dicc.Cantidad()
+}
+
 func CrearUsuario(nombre string, posicion int) Usuario {
 	usuario := new(usuarioImplementacion)
 	usuario.nombre = nombre
@@ -111,6 +130,12 @@ func CrearUsuario(nombre string, posicion int) Usuario {
 		return 0
 	})
 	return usuario
+}
+
+func CrearDiccionarioDeUsuarios() DiccionarioUsuarios {
+	dic := new(diccionarioUsuariosImplementacion)
+	dic.dicc = diccionario.CrearHash[string, Usuario]()
+	return dic
 }
 
 func distancia(x, y int) int {
