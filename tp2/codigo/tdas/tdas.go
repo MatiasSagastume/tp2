@@ -1,4 +1,4 @@
-package tdas
+package algogram_tdas
 
 type Usuario interface {
 	LeerNombreDeUsuario() string
@@ -15,4 +15,10 @@ type Post interface {
 	RecibirLike(Usuario)
 	MostrarPost() string
 	MostrarLikes() (string, error)
+}
+
+type DiccionarioUsuarios interface {
+	DevolverUsuario(string) (Usuario, error)
+	AgregarUsuario(string, Usuario)
+	Cantidad() int
 }
