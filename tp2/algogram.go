@@ -61,7 +61,7 @@ func lectura(diccUsuarios algogram_tdas.DiccionarioUsuarios, listaDePosts []algo
 		parametrosIngresados := palabras[1:]
 		switch {
 		case comando == "login":
-			if usuarioLogueado != nil {
+			if hayAlguienLogueado(usuarioLogueado) {
 				fmt.Println(errores.ErrorUsuarioLogueado{}.Error())
 				continue
 			}
@@ -73,15 +73,18 @@ func lectura(diccUsuarios algogram_tdas.DiccionarioUsuarios, listaDePosts []algo
 			usuarioLogueado = usuario
 			fmt.Println("Hola ", usuario.LeerNombreDeUsuario())
 		case comando == "logout":
-			if usuarioLogueado == nil {
+			if !hayAlguienLogueado(usuarioLogueado) {
 				fmt.Println(errores.ErrorNadieLoggeado{})
 				continue
 			}
 			usuarioLogueado = nil
 			fmt.Println("Adios")
-
+		case comando == "publicar":
+			if !hayAlguienLogueado(usuarioLogueado) {
+				fmt.Println(errores.ErrorNadieLoggeado{})
+				continue
+			}
 		}
-
 	}
 }
 
@@ -92,4 +95,8 @@ func login(parametros []string, diccUsuarios algogram_tdas.DiccionarioUsuarios) 
 	}
 	usuario, err := diccUsuarios.DevolverUsuario(parametros[0])
 	return usuario, err
+}
+
+func hayAlguienLogueado(usuarioLogueado algogram_tdas.Usuario) bool {
+	return usuarioLogueado != nil
 }
