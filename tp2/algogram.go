@@ -72,6 +72,14 @@ func lectura(diccUsuarios algogram_tdas.DiccionarioUsuarios, listaDePosts []algo
 			}
 			usuarioLogueado = usuario
 			fmt.Println("Hola ", usuario.LeerNombreDeUsuario())
+		case comando == "logout":
+			if usuarioLogueado == nil {
+				fmt.Println(errores.ErrorNadieLoggeado{})
+				continue
+			}
+			usuarioLogueado = nil
+			fmt.Println("Adios")
+
 		}
 
 	}
@@ -84,6 +92,4 @@ func login(parametros []string, diccUsuarios algogram_tdas.DiccionarioUsuarios) 
 	}
 	usuario, err := diccUsuarios.DevolverUsuario(parametros[0])
 	return usuario, err
-}
-
 }
