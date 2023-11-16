@@ -114,6 +114,15 @@ func (dic *diccionarioUsuariosImplementacion) Cantidad() int {
 	return dic.dicc.Cantidad()
 }
 
+func (dic *diccionarioUsuariosImplementacion) AgregarPost(post Post) {
+	dic.dicc.Iterar(func(clave string, dato Usuario) bool {
+		if clave != post.LeerNombreDelPublicador() {
+			dato.AgregarAlFeed(post)
+		}
+		return true
+	})
+}
+
 func CrearUsuario(nombre string, posicion int) Usuario {
 	usuario := new(usuarioImplementacion)
 	usuario.nombre = nombre
