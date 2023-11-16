@@ -84,6 +84,7 @@ func lectura(diccUsuarios algogram_tdas.DiccionarioUsuarios, listaDePosts []algo
 				fmt.Println(errores.ErrorNadieLoggeado{})
 				continue
 			}
+			publicarPost(usuarioLogueado, parametrosIngresados[1:], listaDePosts, diccUsuarios)
 		}
 	}
 }
@@ -99,4 +100,9 @@ func login(parametros []string, diccUsuarios algogram_tdas.DiccionarioUsuarios) 
 
 func hayAlguienLogueado(usuarioLogueado algogram_tdas.Usuario) bool {
 	return usuarioLogueado != nil
+}
+
+func publicarPost(usuario algogram_tdas.Usuario, texto []string, listaDePosts []algogram_tdas.Post, dicc algogram_tdas.DiccionarioUsuarios) {
+	post := usuario.PublicarPost(len(listaDePosts), strings.Join(texto, ESPACIO))
+	dicc.AgregarPost(post)
 }
