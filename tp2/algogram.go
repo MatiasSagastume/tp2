@@ -25,12 +25,9 @@ func main() {
 	diccUsuarios, err := crearDiccionarioUsuarios(rutaUsuarios)
 	if err != nil {
 		fmt.Println(errores.ErrorLeerArchivo{})
-	}
-	listaDePosts := make([]algogram_tdas.Post, 0, 1)
-	if err != nil {
-		fmt.Println(err.Error())
 		return
 	}
+	listaDePosts := make([]algogram_tdas.Post, 0, 1)
 	lectura(diccUsuarios, listaDePosts)
 
 }
@@ -71,7 +68,7 @@ func lectura(diccUsuarios algogram_tdas.DiccionarioUsuarios, listaDePosts []algo
 				continue
 			}
 			usuarioLogueado = usuario
-			fmt.Println("Hola ", usuario.LeerNombreDeUsuario())
+			fmt.Println("Hola", usuario.LeerNombreDeUsuario())
 		case comando == "logout":
 			if !hayAlguienLogueado(usuarioLogueado) {
 				fmt.Println(errores.ErrorNadieLoggeado{}.Error())
@@ -84,7 +81,7 @@ func lectura(diccUsuarios algogram_tdas.DiccionarioUsuarios, listaDePosts []algo
 				fmt.Println(errores.ErrorNadieLoggeado{}.Error())
 				continue
 			}
-			publicarPost(usuarioLogueado, parametrosIngresados[1:], listaDePosts, diccUsuarios)
+			publicarPost(usuarioLogueado, parametrosIngresados, &listaDePosts, diccUsuarios)
 			fmt.Println("Post publicado")
 		case comando == "ver_siguiente_feed":
 			if !hayAlguienLogueado(usuarioLogueado) {
@@ -114,7 +111,8 @@ func hayAlguienLogueado(usuarioLogueado algogram_tdas.Usuario) bool {
 	return usuarioLogueado != nil
 }
 
-func publicarPost(usuario algogram_tdas.Usuario, texto []string, listaDePosts []algogram_tdas.Post, dicc algogram_tdas.DiccionarioUsuarios) {
-	post := usuario.PublicarPost(len(listaDePosts), strings.Join(texto, ESPACIO))
-	dicc.AgregarPost(post)
+func publicarPost(usuario algogram_tdas.Usuario, texto []string, listaDePosts *[]algogram_tdas.Post, diccUsuarios algogram_tdas.DiccionarioUsuarios) {
+	post := usuario.PublicarPost(len(*listaDePosts), strings.Join(texto, ESPACIO))
+	*listaDePosts = append(*listaDePosts, post)
+	diccUsuarios.AgregarPost(post)
 }
