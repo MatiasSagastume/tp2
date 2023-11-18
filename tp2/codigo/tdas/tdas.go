@@ -4,7 +4,7 @@ type Usuario interface {
 	LeerNombreDeUsuario() string
 	MostrarAfinidad() int
 	HayMasPosts() bool
-	VerSiguientePost() error
+	VerSiguientePost() (Post, error)
 	AgregarAlFeed(Post)
 	PublicarPost(int, string) Post
 }
@@ -12,6 +12,7 @@ type Usuario interface {
 type Post interface {
 	LeerNombreDelPublicador() string
 	MostrarAfinidadDelPublicador() int
+	MostrarID() int
 	RecibirLike(Usuario)
 	MostrarPost() string
 	MostrarLikes() (string, error)
@@ -20,5 +21,6 @@ type Post interface {
 type DiccionarioUsuarios interface {
 	DevolverUsuario(string) (Usuario, error)
 	AgregarUsuario(string, Usuario)
+	AgregarPost(Post)
 	Cantidad() int
 }
