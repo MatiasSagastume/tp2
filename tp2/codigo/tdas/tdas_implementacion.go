@@ -16,10 +16,9 @@ type postImplementacion struct {
 }
 
 type usuarioImplementacion struct {
-	nombre     string
-	posicion   int
-	postActual Post
-	feed       cola_prioridad.ColaPrioridad[Post] // Heap de minimos
+	nombre   string
+	posicion int
+	feed     cola_prioridad.ColaPrioridad[Post] // Heap de minimos
 }
 
 type diccionarioUsuariosImplementacion struct {
@@ -38,12 +37,11 @@ func (usuario *usuarioImplementacion) HayMasPosts() bool {
 	return !usuario.feed.EstaVacia()
 }
 
-func (usuario *usuarioImplementacion) VerSiguientePost() error {
+func (usuario *usuarioImplementacion) VerSiguientePost() (Post, error) {
 	if !usuario.HayMasPosts() {
-		return errores.ErrorNoHayPosts{}
+		return nil, errores.ErrorNoHayPostsOLogueado{}
 	}
-	usuario.postActual = usuario.feed.Desencolar()
-	return nil
+	return usuario.feed.Desencolar(), nil
 }
 
 func (usuario *usuarioImplementacion) AgregarAlFeed(post Post) {
@@ -67,7 +65,7 @@ func (post *postImplementacion) RecibirLike(usuario Usuario) {
 
 func (post *postImplementacion) MostrarPost() string {
 	var res string
-	res += "Post ID: " + strconv.Itoa(post.id) + "\n"
+	res += "Post ID " + strconv.Itoa(post.MostrarID()) + "\n"
 	res += post.LeerNombreDelPublicador() + " dijo: " + post.contenido + "\n"
 	res += "Likes: " + strconv.Itoa(post.likes.Cantidad())
 	return res
@@ -88,6 +86,9 @@ func (post *postImplementacion) MostrarLikes() (string, error) {
 
 func (post *postImplementacion) MostrarAfinidadDelPublicador() int {
 	return post.publicador.MostrarAfinidad()
+}
+func (post *postImplementacion) MostrarID() int {
+	return post.id
 }
 
 func CrearPost(id int, usuario Usuario, texto string) Post {
@@ -136,7 +137,10 @@ func CrearUsuario(nombre string, posicion int) Usuario {
 		if distanciaA < distanciaB {
 			return 1
 		}
-		return 0
+		if a.MostrarID() < b.MostrarID() {
+			return 1
+		}
+		return -1
 	})
 	return usuario
 }
