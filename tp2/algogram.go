@@ -74,17 +74,29 @@ func lectura(diccUsuarios algogram_tdas.DiccionarioUsuarios, listaDePosts []algo
 			fmt.Println("Hola ", usuario.LeerNombreDeUsuario())
 		case comando == "logout":
 			if !hayAlguienLogueado(usuarioLogueado) {
-				fmt.Println(errores.ErrorNadieLoggeado{})
+				fmt.Println(errores.ErrorNadieLoggeado{}.Error())
 				continue
 			}
 			usuarioLogueado = nil
 			fmt.Println("Adios")
 		case comando == "publicar":
 			if !hayAlguienLogueado(usuarioLogueado) {
-				fmt.Println(errores.ErrorNadieLoggeado{})
+				fmt.Println(errores.ErrorNadieLoggeado{}.Error())
 				continue
 			}
 			publicarPost(usuarioLogueado, parametrosIngresados[1:], listaDePosts, diccUsuarios)
+			fmt.Println("Post publicado")
+		case comando == "ver_siguiente_feed":
+			if !hayAlguienLogueado(usuarioLogueado) {
+				fmt.Println(errores.ErrorNoHayPostsOLogueado{}.Error())
+				continue
+			}
+			post, err := usuarioLogueado.VerSiguientePost()
+			if err != nil {
+				fmt.Println(err.Error())
+				continue
+			}
+			fmt.Println(post.MostrarPost())
 		}
 	}
 }
