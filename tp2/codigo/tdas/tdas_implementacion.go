@@ -8,6 +8,11 @@ import (
 	"tdas/diccionario"
 )
 
+const (
+	TABULACION     = "	"
+	SALTO_DE_LINEA = "\n"
+)
+
 type postImplementacion struct {
 	id         int
 	publicador Usuario
@@ -65,23 +70,23 @@ func (post *postImplementacion) RecibirLike(usuario Usuario) {
 
 func (post *postImplementacion) MostrarPost() string {
 	var res string
-	res += "Post ID " + strconv.Itoa(post.MostrarID()) + "\n"
-	res += post.LeerNombreDelPublicador() + " dijo: " + post.contenido + "\n"
+	res += "Post ID " + strconv.Itoa(post.MostrarID()) + SALTO_DE_LINEA
+	res += post.LeerNombreDelPublicador() + " dijo: " + post.contenido + SALTO_DE_LINEA
 	res += "Likes: " + strconv.Itoa(post.likes.Cantidad())
 	return res
 }
 
-func (post *postImplementacion) MostrarLikes() (string, error) {
+func (post *postImplementacion) MostrarLikes() string {
 	var res string
 	if post.likes.Cantidad() == 0 {
-		return res, errores.ErrorPostLikeados{}
+		return errores.ErrorPostLikeados{}.Error()
 	}
-	res = "El post tiene " + strconv.Itoa(post.likes.Cantidad()) + " likes:\n"
+	res = "El post tiene " + strconv.Itoa(post.likes.Cantidad()) + " likes:"
 	for iter := post.likes.Iterador(); iter.HaySiguiente(); iter.Siguiente() {
 		nombre, _ := iter.VerActual()
-		res += nombre + "\n"
+		res += SALTO_DE_LINEA + TABULACION + nombre
 	}
-	return res, nil
+	return res
 }
 
 func (post *postImplementacion) MostrarAfinidadDelPublicador() int {
