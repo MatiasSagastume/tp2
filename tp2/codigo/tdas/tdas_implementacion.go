@@ -112,8 +112,8 @@ func (dic *diccionarioUsuariosImplementacion) DevolverUsuario(nombre string) (Us
 	return dic.dicc.Obtener(nombre), nil
 }
 
-func (dic *diccionarioUsuariosImplementacion) AgregarUsuario(nombre string, usuario Usuario) {
-	dic.dicc.Guardar(nombre, usuario)
+func (dic *diccionarioUsuariosImplementacion) AgregarUsuario(usuario Usuario) {
+	dic.dicc.Guardar(usuario.LeerNombreDeUsuario(), usuario)
 }
 
 func (dic *diccionarioUsuariosImplementacion) Cantidad() int {
