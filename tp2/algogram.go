@@ -43,7 +43,7 @@ func crearDiccionarioUsuarios(ruta string) (algogram_tdas.DiccionarioUsuarios, e
 	lector := bufio.NewScanner(archLista)
 	for lector.Scan() {
 		nombreUsuario := lector.Text()
-		res.AgregarUsuario(nombreUsuario, algogram_tdas.CrearUsuario(nombreUsuario, res.Cantidad()))
+		res.AgregarUsuario(algogram_tdas.CrearUsuario(nombreUsuario, res.Cantidad()))
 	}
 	return res, nil
 }
