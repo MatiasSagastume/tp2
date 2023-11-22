@@ -15,7 +15,7 @@ type Post interface {
 	MostrarID() int
 	RecibirLike(Usuario)
 	MostrarPost() string
-	MostrarLikes() (string, error)
+	MostrarLikes() string
 }
 
 type DiccionarioUsuarios interface {
